@@ -582,7 +582,7 @@ class TimedContentPlugin {
 		$period_count   = 0;
 
 		$human_readable      = (bool) $args['human_readable'];
-		$freq                = $args['freq'];
+		$freq                = (int) $args['freq'];
 		$timezone            = $args['timezone'];
 		$recurr_type         = $args['recurr_type'];
 		$num_repeat          = intval( $args['num_repeat'] );
@@ -669,7 +669,7 @@ class TimedContentPlugin {
 			if ( ! $exception_period && $current > $right_now_t - $day_limit * 86400 ) {
 				// Adjust current date offset if start DST differs from current DST and we don't have a monthly pattern
 				$current_adjusted = $current;
-                if (!$monthly_pattern) {
+                if (TIMED_CONTENT_FREQ_MONTHLY !== $freq) {
                     $current_has_dst = $this->format_timestamp('I', $current);
                     if ('1' === $start_has_dst && '0' === $current_has_dst) {
                         $current_adjusted += 3600;
@@ -901,7 +901,7 @@ class TimedContentPlugin {
 		} else {
 			$action = __( 'Hide the content', 'timed-content' );
 		}
-		$freq                = $args['freq'];
+		$freq                = (int)$args['freq'];
 		$timezone            = $args['timezone'];
 		$recurr_type         = $args['recurr_type'];
 		$num_repeat          = intval( $args['num_repeat'] );
@@ -931,7 +931,7 @@ class TimedContentPlugin {
 			$instance_end_time
 		);
 
-		if ( 0 === $freq ) {
+		if ( TIMED_CONTENT_FREQ_HOURLY === $freq ) {
 			$desc .= '<br />' . sprintf(
 					/* translators: %d numerical hours value */
 				_n(
@@ -942,7 +942,7 @@ class TimedContentPlugin {
 				),
 				$interval_multiplier
 			);
-		} elseif ( 1 === $freq ) {
+		} elseif ( TIMED_CONTENT_FREQ_DAILY === $freq ) {
 			$desc .= '<br />' . sprintf(
 					/* translators: %d numerical days value */
 				_n(
@@ -953,7 +953,7 @@ class TimedContentPlugin {
 				),
 				$interval_multiplier
 			);
-		} elseif ( 2 === $freq ) {
+		} elseif ( TIMED_CONTENT_FREQ_WEEKLY === $freq ) {
 			if ( ( $days_of_week ) && ( is_array( $days_of_week ) ) ) {
 				$days      = array();
 				$days_list = '';
@@ -1082,7 +1082,7 @@ class TimedContentPlugin {
 					$interval_multiplier
 				);
 			}
-		} elseif ( 3 === $freq ) {
+		} elseif ( TIMED_CONTENT_FREQ_MONTHLY === $freq ) {
 			if ( 'yes' === $monthly_pattern ) {
 				if ( 1 === $interval_multiplier ) {
 					$desc .= '<br />' . sprintf(
@@ -1120,7 +1120,7 @@ class TimedContentPlugin {
 					$interval_multiplier
 				);
 			}
-		} elseif ( 4 === $freq ) {
+		} elseif ( TIMED_CONTENT_FREQ_YEARLY === $freq ) {
 			$desc .= '<br />' . sprintf(
 				/* translators: %d: year count */
 				_n(
